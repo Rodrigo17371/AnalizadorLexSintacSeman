@@ -1,0 +1,65 @@
+package TrabajoFinal.AnalizadorLexSinSem;
+
+import java_cup.runtime.*;
+import TrabajoFinal.AnalizadorLexSinSem.Tokens;
+
+parser code {:
+    private Symbol s;
+    
+    public void syntax_error(Symbol s){
+        this.s = s;
+    }
+
+    public Symbol getS(){
+        return this.s;
+    }
+:};
+
+terminal Linea, Var, Const, Let, If, Else, While, For, Function, Return,
+    Igual, Suma, Resta, Multiplicacion, Division, Parentesis_a, Parentesis_c,
+    Llave_a, Llave_c, P_coma, Identificador, Numero, ERROR;
+
+non terminal INICIO, SENTENCIA, DECLARACION, IF, WHILE, FOR, FUNCTION, RETURN;
+
+start with INICIO;
+
+INICIO ::= 
+    Function Identificador Parentesis_a Parentesis_c Llave_a SENTENCIA Llave_c |
+    Llave_a SENTENCIA Llave_c
+;
+SENTENCIA ::= 
+    SENTENCIA DECLARACION |
+    DECLARACION |
+    SENTENCIA IF | 
+    IF |
+    SENTENCIA WHILE |
+    WHILE |
+    SENTENCIA FOR |
+    FOR |
+    SENTENCIA FUNCTION |
+    FUNCTION |
+    SENTENCIA RETURN |
+    RETURN |
+    Identificador Igual Numero P_coma
+;
+DECLARACION ::= 
+    Var Identificador Igual Numero P_coma |
+    Const Identificador Igual Numero P_coma |
+    Let Identificador Igual Numero P_coma
+;
+IF ::= 
+    If Parentesis_a Identificador Igual Numero Parentesis_c Llave_a SENTENCIA Llave_c |
+    If Parentesis_a Identificador Igual Numero Parentesis_c Llave_a SENTENCIA Llave_c Else Llave_a SENTENCIA Llave_c
+;
+WHILE ::= 
+    While Parentesis_a Identificador Igual Numero Parentesis_c Llave_a SENTENCIA Llave_c
+;
+FOR ::= 
+    For Parentesis_a Var Identificador Igual Numero P_coma Identificador Igual Numero P_coma Identificador Igual Numero Parentesis_c Llave_a SENTENCIA Llave_c
+;
+FUNCTION ::= 
+    Function Identificador Parentesis_a Parentesis_c Llave_a SENTENCIA Llave_c
+;
+RETURN ::= 
+    Return Numero P_coma
+;
